@@ -1,0 +1,54 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route("/")
+def helloWorld():
+    return "Hello World !!!!"
+
+data =[
+{
+    "Contact": "9987644456",
+    "Name":"Raju",
+    "done": False,
+    "id": 1,
+},
+{
+    "Contact": "9876543222",
+    "Name":"Rahul",
+    "done": False,
+    "id": 2,
+}
+]
+@app.route("/add-contact", methods=["POST"])
+def addTask():
+    if not request.json:
+        return jsonify({
+            "status": "error",
+            "message": "Please provide the data in JSON format"
+        })
+    
+    newContact = {
+        "id": data[-1]["id"] + 1,
+        "done": False,
+        "Name": request.json["Name"],
+        "Contact": request.json["Contact"]
+    }
+    data.append(newContact)
+
+    return jsonify({
+        "status": "success",
+        "message" :"contact added successfully"
+    })
+
+@app.route('/get-Contact')
+def getTask():
+    return jsonify({
+        'data':data
+    })
+
+
+
+
+if (__name__ == "__main__"):
+    app.run(debug=True)
